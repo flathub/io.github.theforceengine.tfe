@@ -1,11 +1,12 @@
- <?xml version="1.0" encoding="UTF-8"?>
-<application>
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
   <id type="desktop">io.github.theforceengine.tfe</id>
   <name>The Force Engine</name>
   <developer_name>The Force Engine Contributors</developer_name>
   <summary>Modern cross-platform port of Star Wars: Dark Forces with mod support</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
+  <launchable type="desktop-id">io.github.theforceengine.tfe.desktop</launchable>
   <url type="homepage">https://theforceengine.github.io/</url>
   <description>
       <p>The Force Engine is a modernised, reverse engineered port of the Jedi Engine used in Star Wars: Dark Forces and Outlaws. Currently, only Dark Forces is supported but there are already many technical and quality-of-life improvements:</p>
@@ -50,4 +51,4 @@
     <content_attribute id="violence-fantasy">intense</content_attribute>
   </content_rating>
   <update_contact>https://theforceengine.github.io/</update_contact>
-</application>
+</component>

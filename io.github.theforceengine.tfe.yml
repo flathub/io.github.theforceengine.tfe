@@ -7,8 +7,8 @@ rename-desktop-file: TheForceEngine.desktop
 rename-icon: TheForceEngine
 
 finish-args:
-  # hardware 3D
-  - --device=dri
+  # hardware 3D and controller access
+  - --device=all
   # X11 + XShm access
   - --share=ipc
   - --socket=x11

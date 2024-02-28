@@ -34,30 +34,28 @@
       <li>Translation support for subtitles/captions</li>
       <li>A built&#x2011;in mod loader</li>
     </ul>
-    <!--
-    <ul xml:lang="de">
-      <li>Unterstützung von Steuer&#2011; und Eingabegeräten, ausgenommen in Menüs</li>
-      <li>Unterstützung von Mausumsicht, wie in modernen Ego&#x2011;Shootern</li>
-      <li>Komplett frei belegbare Steuereingaben</li>
-      <li>Unterstützung von Breitbildschirmen und hohen Auflösungen</li>
-      <li>Texturfilter und Glüheffekte auf Lichtquellen</li>
-      <li>Dialoguntertitel, einschließlich situativer Dialoge im Spiel</li>
-      <li>Untertitel bei wichtigen Audiohinweisen im Spiel</li>
-      <li>Unterstützung von übersetzten Untertiteln</li>
-      <li>Integrierter Lader von Modifikationen</li>
+    <ul>
+      <li xml:lang="de">Unterstützung von Steuer&#2011; und Eingabegeräten, ausgenommen in Menüs</li>
+      <li xml:lang="de">Unterstützung von Mausumsicht, wie in modernen Ego&#x2011;Shootern</li>
+      <li xml:lang="de">Komplett frei belegbare Steuerung</li>
+      <li xml:lang="de">Unterstützung von Breitbildschirmen und hohen Auflösungen</li>
+      <li xml:lang="de">Texturfilter und Lichteffekte auf Lichtquellen</li>
+      <li xml:lang="de">Dialoguntertitel einschließlich situativer Dialoge im Spiel</li>
+      <li xml:lang="de">Untertitel bei wichtigen Audiohinweisen im Spiel</li>
+      <li xml:lang="de">Unterstützung von Übersetzungen für Untertitel</li>
+      <li xml:lang="de">Verbesserte Unterstützung für Mods mit integriertem Lademenü</li>
     </ul>
-    <ul xml:lang="pl">
-      <li>Obsługa kontrolerów, za wyjątkiem w menu</li>
-      <li>Obsługa patrzenia myszą, jak w nowoczesnych pierwszoosobowych strzelankach</li>
-      <li>Kompletnie dowolnie przypięcie akcji sterowania gry</li>
-      <li>Obsługa szerokich ekranów i wysokich rozdzielczości</li>
-      <li>Filtr tekstur i efekty lśnienia źródeł światła</li>
-      <li>Podtytuły dialogów, w tym okolicznościowych</li>
-      <li>Napisy przy ważnych sygnałach dźwiękowych w grze</li>
-      <li>Obsługa przetłumaczonych podtytułów i napisów</li>
-      <li>Wbudowany ładownik modyfikacji</li>
+    <ul>
+      <li xml:lang="pl">Obsługa kontrolerów, za wyjątkiem w menu</li>
+      <li xml:lang="pl">Obsługa patrzenia myszą, jak w nowoczesnych pierwszoosobowych strzelankach</li>
+      <li xml:lang="pl">Kompletnie dowolnie przypięcie akcji sterowania gry</li>
+      <li xml:lang="pl">Obsługa szerokich ekranów i wysokich rozdzielczości</li>
+      <li xml:lang="pl">Filtr tekstur i efekty lśnienia źródeł światła</li>
+      <li xml:lang="pl">Podtytuły dialogów, w tym okolicznościowych</li>
+      <li xml:lang="pl">Napisy przy ważnych sygnałach dźwiękowych w grze</li>
+      <li xml:lang="pl">Obsługa przetłumaczonych podtytułów i napisów</li>
+      <li xml:lang="pl">Wbudowany ładownik modyfikacji</li>
     </ul>
-    -->
     <p>Future plans include built&#x2011;in tools for creating mods and maps for the games as well as Outlaws support.</p>
     <p xml:lang="de">Zukünftige Pläne beinhalten Werkzeuge zur Erstellung von Modifikationen und Karten für Spiele, sowie die Unterstützung von „Outlaws“.</p>
     <p xml:lang="pl">Przyszłe plany zawierają narzędzia tworzenia modyfikacji i map do gier, jak i obsługę „Outlaws”.</p>

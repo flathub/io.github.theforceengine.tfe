@@ -34,6 +34,7 @@
       <li>Translation support for subtitles/captions</li>
       <li>A built&#x2011;in mod loader</li>
     </ul>
+    <!--
     <ul xml:lang="de">
       <li>Unterstützung von Steuer&#2011; und Eingabegeräten, ausgenommen in Menüs</li>
       <li>Unterstützung von Mausumsicht, wie in modernen Ego&#x2011;Shootern</li>
@@ -56,6 +57,7 @@
       <li>Obsługa przetłumaczonych podtytułów i napisów</li>
       <li>Wbudowany ładownik modyfikacji</li>
     </ul>
+    -->
     <p>Future plans include built&#x2011;in tools for creating mods and maps for the games as well as Outlaws support.</p>
     <p xml:lang="de">Zukünftige Pläne beinhalten Werkzeuge zur Erstellung von Modifikationen und Karten für Spiele, sowie die Unterstützung von „Outlaws“.</p>
     <p xml:lang="pl">Przyszłe plany zawierają narzędzia tworzenia modyfikacji i map do gier, jak i obsługę „Outlaws”.</p>

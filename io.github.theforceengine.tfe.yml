@@ -1,17 +1,20 @@
-app-id: io.github.theforceengine.tfe
+id: io.github.theforceengine.tfe
 runtime: org.freedesktop.Platform
 runtime-version: '23.08'
-sdk: org.freedesktop.Sdk
+sdk: org.freedesktop.Sdk//23.08
 command: io.github.theforceengine.tfe.sh
-rename-desktop-file: TheForceEngine.desktop
-rename-icon: TheForceEngine
+build-options:
+  strip: false
+  no-debuginfo: true
+separate-locales: false
 
 finish-args:
   # hardware 3D and controller access
   - --device=all
   # X11 + XShm access
   - --share=ipc
-  - --socket=x11
+  - --socket=wayland
+  - --socket=fallback-x11
   # Audio
   - --socket=pulseaudio
   # Access to the default Steam Dark Forces data directory for native and Flatpak installations
@@ -29,47 +32,60 @@ modules:
         tag: v1.09.540
         x-checker-data:
           type: git
-          tag-pattern: ^v([\\d.]+)$
+          tag-pattern: ^v\\d+(\\.\\d+)+$
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path
       - type: patch
         path: game_data_detection.patch
-      # Include local metainfo.xml file until a TFE release is made that includes it
-      # https://github.com/luciusDXL/TheForceEngine/pull/375
-      - type: file
-        path: io.github.theforceengine.tfe.metainfo.xml
-      # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
-      - type: script
-        dest-filename: io.github.theforceengine.tfe.sh
-        commands:
-          # Check for game data
-          - |
-            set -e
-            if [[ -z "$TFE_SKIP_DATACHECK" ]] && \
-               [[ -z $(find "$XDG_DATA_HOME" -iname 'dark.gob') ]] && \
-               [[ ! -d "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/" ]] && \
-               [[ ! -d '/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/' ]]; then
-                zenity --error \
-                       --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
-                       --ok-label 'Close' \
-                       --no-wrap
-            fi
-            export TFE_DATA_HOME='/app/share/TheForceEngine'
-            exec theforceengine
-    buildsystem: cmake-ninja
+    buildsystem: cmake
     config-opts:
       - -DCMAKE_BUILD_TYPE=Debug
       - -DDISABLE_SYSMIDI=ON
     builddir: true
-    build-commands:
-      # Install launcher script
-      - |
-        set -e
-        install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
+    post-install:
         # Edit and install desktop launcher file
-        desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/TheForceEngine.desktop'
-        # Install locally-included appstream metadata file until a TFE release is made that includes it
-        # https://github.com/luciusDXL/TheForceEngine/pull/375
-        install -Dm 0644 '../io.github.theforceengine.tfe.metainfo.xml' '/app/share/metainfo/io.github.theforceengine.tfe.metainfo.xml'
+      - desktop-file-edit --set-key=Exec
+                          --set-value="$FLATPAK_ID.sh"
+                          "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
+      - install -Dvm 0644
+                -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"
+                "../TheForceEngine/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+      - appstream-compose --prefix="$FLATPAK_DEST/share/TheForceEngine/Mods"
+                          --basename="$FLATPAK_ID.Mod.AdjustableHud"
+                          --origin=flatpak
+                          "$FLATPAK_ID.Mod.AdjustableHud"
+    modules:
+      - shared-modules/glu/glu-9.json
+      - shared-modules/glew/glew.json
+
+  # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
+  - name: launch_script
+    sources:
+      - type: file
+        path: io.github.theforceengine.tfe.sh
+    buildsystem: simple
+    build-commands:
+      # Install launch script
+      - install -Dm 0755 "$FLATPAK_ID.sh" -t "$FLATPAK_DEST/bin"
+
+cleanup-commands:
+  - rm -vf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+
+add-extensions:
+  # TFE’s mod extension point
+  io.github.theforceengine.tfe.Mod:
+    directory: share/TheForceEngine/Mods
+    merge-dirs: .
+    no-autodownload: true
+    autodelete: false
+    bundle: false
+    subdirectories: true
+  # AdjustableHud mod bundled with TFE
+  io.github.theforceengine.tfe.Mod.AdjustableHud:
+    directory: share/TheForceEngine/Mods
+    no-autodownload: false
+    autodelete: true
+    bundle: true
+    subdirectories: false

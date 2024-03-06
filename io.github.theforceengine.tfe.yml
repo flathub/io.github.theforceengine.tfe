@@ -5,9 +5,6 @@ sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
 rename-desktop-file: TheForceEngine.desktop
 rename-icon: TheForceEngine
-build-options:
-  strip: true
-  no-debuginfo: true
 
 finish-args:
   # hardware 3D and controller access
@@ -24,6 +21,9 @@ finish-args:
 
 modules:
   - name: tfe
+    modules:
+      - shared-modules/glu/glu-9.json
+      - shared-modules/glew/glew.json
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
@@ -61,6 +61,7 @@ modules:
             exec theforceengine
     buildsystem: cmake-ninja
     config-opts:
+      - -DCMAKE_BUILD_TYPE=Debug
       - -DDISABLE_SYSMIDI=ON
     builddir: true
     build-commands:
@@ -73,6 +74,3 @@ modules:
         # Install locally-included appstream metadata file until a TFE release is made that includes it
         # https://github.com/luciusDXL/TheForceEngine/pull/375
         install -Dm 0644 '../io.github.theforceengine.tfe.metainfo.xml' '/app/share/metainfo/io.github.theforceengine.tfe.metainfo.xml'
-    modules:
-      - shared-modules/glu/glu-9.json
-      - shared-modules/glew/glew.json

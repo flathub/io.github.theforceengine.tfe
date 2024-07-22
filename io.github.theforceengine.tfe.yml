@@ -27,7 +27,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
-        tag: v1.09.540
+        tag: v1.10.000
         x-checker-data:
           type: git
           tag-pattern: ^v([\\d.]+)$
@@ -61,7 +61,7 @@ modules:
             exec theforceengine
     buildsystem: cmake-ninja
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Debug
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DDISABLE_SYSMIDI=ON
     builddir: true
     build-commands:

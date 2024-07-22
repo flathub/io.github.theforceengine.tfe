@@ -30,7 +30,7 @@ modules:
         tag: v1.10.000
         x-checker-data:
           type: git
-          tag-pattern: ^v([\\d.]+)$
+          tag-pattern: ^v([\d.]+)$
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: user_data.patch

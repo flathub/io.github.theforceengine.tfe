@@ -30,7 +30,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
-        tag: v1.09.540
+        tag: v1.10.000
         x-checker-data:
           type: git
           tag-pattern: ^v\\d+(\\.\\d+)+$
@@ -42,7 +42,7 @@ modules:
         path: game_data_detection.patch
     buildsystem: cmake
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Debug
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DDISABLE_SYSMIDI=ON
     builddir: true
     post-install:

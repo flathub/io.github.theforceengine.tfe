@@ -3,8 +3,6 @@ runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
-rename-desktop-file: TheForceEngine.desktop
-rename-icon: TheForceEngine
 
 finish-args:
   # hardware 3D and controller access

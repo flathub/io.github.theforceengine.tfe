@@ -3,10 +3,6 @@ runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk//23.08
 command: io.github.theforceengine.tfe.sh
-build-options:
-  strip: false
-  no-debuginfo: true
-separate-locales: false
 
 finish-args:
   # hardware 3D and controller access

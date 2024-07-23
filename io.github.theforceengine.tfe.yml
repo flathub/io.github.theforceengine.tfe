@@ -36,7 +36,7 @@ modules:
       # Patch automatic detection of Dark Forces installation to only check default Steam path
       - type: patch
         path: game_data_detection.patch
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DDISABLE_SYSMIDI=ON

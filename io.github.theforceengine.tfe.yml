@@ -69,8 +69,4 @@ modules:
       - |
         set -e
         install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
-        # Edit and install desktop launcher file
-        desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/TheForceEngine.desktop'
-        # Install locally-included appstream metadata file until a TFE release is made that includes it
-        # https://github.com/luciusDXL/TheForceEngine/pull/375
-        install -Dm 0644 '../io.github.theforceengine.tfe.metainfo.xml' '/app/share/metainfo/io.github.theforceengine.tfe.metainfo.xml'
+        desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/io.github.theforceengine.tfe.desktop'

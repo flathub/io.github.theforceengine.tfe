@@ -31,40 +31,36 @@ modules:
           tag-pattern: ^v([\d.]+)$
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
-        path: user_data.patch
+        path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path
       - type: patch
-        path: game_data_detection.patch
-      # Include local metainfo.xml file until a TFE release is made that includes it
-      # https://github.com/luciusDXL/TheForceEngine/pull/375
-      - type: file
-        path: io.github.theforceengine.tfe.metainfo.xml
+        path: tfe_02_game_data_detection.patch
       # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
       - type: script
         dest-filename: io.github.theforceengine.tfe.sh
-        commands: |
-          set -e
-          if [[ -z "$TFE_SKIP_DATACHECK" ]]; then
-              declare -a dfpaths=("$XDG_DATA_HOME"
-                                  "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/"
-                                  "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/")
-              for check in "${dfpaths[@]}"; do
-                  if [[ ! -z $(find "$check" -iname 'dark.gob') ]]; then
-                      FOUND_DFDATA="true"
-                      echo "Found Dark Forces data: $check"
-                      break
-                  fi
-              done
-              if [[ -z "$FOUND_DFDATA" ]]; then
-                  zenity --error \
-                      --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
-                      --ok-label 'Close' \
-                      --no-wrap
-                  exit 1
-              fi
-          fi
-          export TFE_DATA_HOME='/app/share/TheForceEngine'
-          exec theforceengine
+        commands:
+          - |
+            set -e
+            if [[ -z "$TFE_SKIP_DATACHECK" ]]; then
+                declare -a dfpaths=("$XDG_DATA_HOME"
+                                    "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/"
+                                    "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/")
+                for check in "${dfpaths[@]}"; do
+                    if [[ ! -z $(find "$check" -iname 'dark.gob') ]]; then
+                        FOUND_DFDATA="true"
+                        echo "Found Dark Forces data: $check"
+                        break
+                    fi
+                done
+                if [[ -z "$FOUND_DFDATA" ]]; then
+                    zenity --error \
+                        --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
+                        --ok-label 'Close' \
+                        --no-wrap
+                fi
+            fi
+            export TFE_DATA_HOME='/app/share/TheForceEngine'
+            exec theforceengine
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo

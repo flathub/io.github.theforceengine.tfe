@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b088aa2a..489bc82b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,7 +14,7 @@ project(TheForceEngine
+ 	DESCRIPTION "Modern 'Jedi Engine' replacement supporting Dark Forces, mods, and in the future Outlaws."
+ 	)
+ 
+-set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD 17)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+diff --git a/TheForceEngine/TFE_Settings/settings.cpp b/TheForceEngine/TFE_Settings/settings.cpp
+index 9724175e..a7c88dd0 100644
+--- a/TheForceEngine/TFE_Settings/settings.cpp
++++ b/TheForceEngine/TFE_Settings/settings.cpp
+@@ -9,8 +9,11 @@
+ #include <TFE_System/system.h>
+ #include <assert.h>
+ #include <algorithm>
++#include <filesystem>
++#include <array>
+ #include <vector>
+ 
++
+ #ifdef _WIN32
+ #include "windows/registry.h"
+ #endif
+@@ -230,15 +233,26 @@ namespace TFE_Settings
+ 			// If the registry approach fails, just try looking in the various hardcoded paths.
+ 			if (!pathValid)
+ 			{
+-				// Try various possible locations.
+-				const char** locations = c_gameLocations[gameId];
+-				for (u32 i = 0; i < c_hardcodedPathCount; i++)
++				std::array<std::string, 4> locations =
+ 				{
+-					if (FileUtil::directoryExits(locations[i]))
+-					{
+-						strcpy(s_gameSettings.header[gameId].sourcePath, locations[i]);
+-						pathValid = true;
+-						break;
++					std::getenv("XDG_DATA_HOME"),
++					".steam/steam/steamapps/common/Dark Forces/Game",
++					".var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game",
++					"snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game"
++				};
++				for (const auto& loc : locations)
++				{
++					std::filesystem::path checkPath = std::filesystem::path(std::getenv("HOME"));
++					checkPath /= loc;
++					if (! std::filesystem::exists(checkPath)) { continue; }
++
++				    for (auto const& dir_entry : std::filesystem::directory_iterator{checkPath}) {
++						if (strcasecmp(const_cast<char*>(dir_entry.path().filename().c_str()), "dark.gob") == 0) {
++							TFE_System::logWrite(LOG_MSG, "Main", const_cast<char*>(checkPath.c_str()));
++							strcpy(s_gameSettings.header[gameId].sourcePath, const_cast<char*>((std::string(checkPath) + "/").c_str()));
++							pathValid = true;
++							break;
++						}
+ 					}
+ 				}
+ 			}

@@ -37,39 +37,19 @@ modules:
       - type: patch
         path: tfe_02_game_data_detection.patch
       # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
-      - type: script
-        dest-filename: io.github.theforceengine.tfe.sh
-        commands:
-          - |
-            set -e
-            if [[ -z "$TFE_SKIP_DATACHECK" ]]; then
-                declare -a dfpaths=("$XDG_DATA_HOME"
-                                    "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/"
-                                    "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/")
-                for check in "${dfpaths[@]}"; do
-                    if [[ ! -z $(find "$check" -iname 'dark.gob') ]]; then
-                        FOUND_DFDATA="true"
-                        echo "Found Dark Forces data: $check"
-                        break
-                    fi
-                done
-                if [[ -z "$FOUND_DFDATA" ]]; then
-                    zenity --error \
-                        --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
-                        --ok-label 'Close' \
-                        --no-wrap
-                fi
-            fi
-            export TFE_DATA_HOME='/app/share/TheForceEngine'
-            exec theforceengine
+      - type: file
+        path: io.github.theforceengine.tfe.sh
+      # Release metadata
+      - type: file
+        path: io.github.theforceengine.tfe.releases.xml
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DDISABLE_SYSMIDI=ON
     builddir: true
     build-commands:
-      # Install launcher script
       - |
         set -e
         install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
+        install -Dm 0755 '../io.github.theforceengine.tfe.releases.xml' -t '/app/share/metainfo/releases/'
         desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/io.github.theforceengine.tfe.desktop'

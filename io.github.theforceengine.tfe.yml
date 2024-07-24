@@ -38,6 +38,9 @@ modules:
       # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
       - type: file
         path: io.github.theforceengine.tfe.sh
+      # Release metadata
+      - type: file
+        path: io.github.theforceengine.tfe.releases.xml
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
@@ -47,4 +50,5 @@ modules:
       - |
         set -e
         install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
+        install -Dm 0755 '../io.github.theforceengine.tfe.releases.xml' -t '/app/share/metainfo/releases/'
         desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/io.github.theforceengine.tfe.desktop'

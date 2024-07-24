@@ -13,9 +13,10 @@ finish-args:
   # Audio
   - --socket=pulseaudio
   # Access to the default Steam Dark Forces data directory for loose, Flatpak and Snap versions of Steam
-  - "--filesystem=home/.local/share/Steam/steamapps/common/Dark Forces/Game:ro"
-  - "--filesystem=home/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game:ro"
-  - "--filesystem=home/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro"
+  - --filesystem=home/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
+  - --filesystem=home/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark
+    Forces/Game:ro
+  - --filesystem=home/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
 
 modules:
   - name: tfe
@@ -29,8 +30,9 @@ modules:
           type: git
           tag-pattern: ^v([\d.]+)$
         # temporarily pin to a commit using the new external release info so flathub release info is correct
-        commit: e19bcde11ad3295f05c316d387a30fd890595a92
+        commit: 6c07cc07e48454c407d17fc0820c457cdfe35abd
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
+        tag: v1.10.000
       - type: patch
         path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path

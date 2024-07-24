@@ -29,8 +29,8 @@ modules:
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
-      # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
         commit: 6c07cc07e48454c407d17fc0820c457cdfe35abd
+      # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path

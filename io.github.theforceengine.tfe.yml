@@ -25,11 +25,11 @@ modules:
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
-        tag: v1.10.000
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
-        commit: 6c07cc07e48454c407d17fc0820c457cdfe35abd
+        # temporarily pin to a commit using the new external release info so flathub release info is correct
+        commit: e19bcde11ad3295f05c316d387a30fd890595a92
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch

@@ -46,5 +46,5 @@ modules:
     build-commands:
       - |
         set -e
-        install -Dm 0755 'io.github.theforceengine.tfe.sh' -t '/app/bin'
+        install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
         desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/io.github.theforceengine.tfe.desktop'

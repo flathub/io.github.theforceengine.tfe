@@ -32,10 +32,10 @@ modules:
           tag-pattern: ^v\\d+(\\.\\d+)+$
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
-        path: user_data.patch
+        path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path
       - type: patch
-        path: game_data_detection.patch
+        path: tfe_02_game_data_detection.patch
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo

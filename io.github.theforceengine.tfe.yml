@@ -3,8 +3,6 @@ runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
-rename-desktop-file: TheForceEngine.desktop
-rename-icon: TheForceEngine
 
 finish-args:
   # hardware 3D and controller access
@@ -27,41 +25,45 @@ modules:
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
-        tag: v1.09.540
+        tag: v1.10.000
         x-checker-data:
           type: git
-          tag-pattern: ^v([\\d.]+)$
+          tag-pattern: ^v([\d.]+)$
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
-        path: user_data.patch
+        path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path
       - type: patch
-        path: game_data_detection.patch
-      # Include local metainfo.xml file until a TFE release is made that includes it
-      # https://github.com/luciusDXL/TheForceEngine/pull/375
-      - type: file
-        path: io.github.theforceengine.tfe.metainfo.xml
+        path: tfe_02_game_data_detection.patch
       # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
       - type: script
         dest-filename: io.github.theforceengine.tfe.sh
         commands:
-          # Check for game data
           - |
             set -e
-            if [[ -z "$TFE_SKIP_DATACHECK" ]] && \
-               [[ -z $(find "$XDG_DATA_HOME" -iname 'dark.gob') ]] && \
-               [[ ! -d "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/" ]] && \
-               [[ ! -d '/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/' ]]; then
-                zenity --error \
-                       --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
-                       --ok-label 'Close' \
-                       --no-wrap
+            if [[ -z "$TFE_SKIP_DATACHECK" ]]; then
+                declare -a dfpaths=("$XDG_DATA_HOME"
+                                    "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/"
+                                    "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/")
+                for check in "${dfpaths[@]}"; do
+                    if [[ ! -z $(find "$check" -iname 'dark.gob') ]]; then
+                        FOUND_DFDATA="true"
+                        echo "Found Dark Forces data: $check"
+                        break
+                    fi
+                done
+                if [[ -z "$FOUND_DFDATA" ]]; then
+                    zenity --error \
+                        --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
+                        --ok-label 'Close' \
+                        --no-wrap
+                fi
             fi
             export TFE_DATA_HOME='/app/share/TheForceEngine'
             exec theforceengine
     buildsystem: cmake-ninja
     config-opts:
-      - -DCMAKE_BUILD_TYPE=Debug
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DDISABLE_SYSMIDI=ON
     builddir: true
     build-commands:
@@ -69,8 +71,4 @@ modules:
       - |
         set -e
         install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
-        # Edit and install desktop launcher file
-        desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/TheForceEngine.desktop'
-        # Install locally-included appstream metadata file until a TFE release is made that includes it
-        # https://github.com/luciusDXL/TheForceEngine/pull/375
-        install -Dm 0644 '../io.github.theforceengine.tfe.metainfo.xml' '/app/share/metainfo/io.github.theforceengine.tfe.metainfo.xml'
+        desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/io.github.theforceengine.tfe.desktop'

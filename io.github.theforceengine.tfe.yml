@@ -30,9 +30,9 @@ modules:
           type: git
           tag-pattern: ^v([\d.]+)$
         # temporarily pin to a commit using the new external release info so flathub release info is correct
-        commit: 6c07cc07e48454c407d17fc0820c457cdfe35abd
+        commit: 6ea7dfce59e83540ba640e8d58f847630f0402b7
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
-        tag: v1.10.000
+        tag: v1.15.000
       - type: patch
         path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path

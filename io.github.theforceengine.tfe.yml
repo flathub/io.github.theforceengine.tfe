@@ -28,8 +28,6 @@ modules:
         x-checker-data:
           type: git
           tag-pattern: ^v\\d+(\\.\\d+)+$
-        # temporarily pin to a commit using the new external release info so flathub release info is correct
-        commit: 6ea7dfce59e83540ba640e8d58f847630f0402b7
         tag: v1.15.000
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
@@ -72,7 +70,7 @@ modules:
                      --origin="$FLATPAK_ID.Debug"
                      --result-root="$FLATPAK_DEST/lib/debug"
                      --data-dir="$FLATPAK_DEST/lib/debug/share/app-info/xmls"
-                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak" 
+                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak"
                      --components="$FLATPAK_ID.Debug"
                      "$FLATPAK_DEST/lib/debug"
 

@@ -1,6 +1,6 @@
-app-id: io.github.theforceengine.tfe
+id: io.github.theforceengine.tfe
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
 
@@ -14,8 +14,7 @@ finish-args:
   - --socket=pulseaudio
   # Access to the default Steam Dark Forces data directory for loose, Flatpak and Snap versions of Steam
   - --filesystem=home/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
-  - --filesystem=home/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark
-    Forces/Game:ro
+  - --filesystem=home/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
   - --filesystem=home/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
 
 modules:
@@ -28,30 +27,86 @@ modules:
         url: https://github.com/luciusDXL/TheForceEngine.git
         x-checker-data:
           type: git
-          tag-pattern: ^v([\d.]+)$
+          tag-pattern: ^v\\d+(\\.\\d+)+$
         # temporarily pin to a commit using the new external release info so flathub release info is correct
         commit: 6c07cc07e48454c407d17fc0820c457cdfe35abd
-      # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
         tag: v1.10.000
+      # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation to only check default Steam path
       - type: patch
         path: tfe_02_game_data_detection.patch
-      # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
-      - type: file
-        path: io.github.theforceengine.tfe.sh
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
-    buildsystem: cmake-ninja
+      # `.Debug` extension AppStream metadata
+      - type: file
+        path: io.github.theforceengine.tfe.Debug.metainfo.xml
+    buildsystem: cmake
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - -DDISABLE_SYSMIDI=ON
     builddir: true
+    post-install:
+      # Install AdjustableHud mod’s AppStream metadata
+      - install -Dvm 0644
+                -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"
+                "../TheForceEngine/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+      # Compose AdjustableHud mod’s AppStream metadata catalog
+      - appstreamcli compose
+                     --prefix=/
+                     --origin="$FLATPAK_ID.Mod.AdjustableHud"
+                     --result-root="$FLATPAK_DEST/share/TheForceEngine/Mods"
+                     --data-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/xmls"
+                     --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak" 
+                     --components="$FLATPAK_ID.Mod.AdjustableHud"
+                     "$FLATPAK_DEST/share/TheForceEngine/Mods"
+      # Install `.Debug` extension AppStream metadata
+      - install -Dvm 0644
+                -t "$FLATPAK_DEST/lib/debug/share/metainfo"
+                "../$FLATPAK_ID.Debug.metainfo.xml"
+      # Compose `.Debug` extension’s AppStream metadata catalog
+      - appstreamcli compose
+                     --prefix=/
+                     --origin="$FLATPAK_ID.Debug"
+                     --result-root="$FLATPAK_DEST/lib/debug"
+                     --data-dir="$FLATPAK_DEST/lib/debug/share/app-info/xmls"
+                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak" 
+                     --components="$FLATPAK_ID.Debug"
+                     "$FLATPAK_DEST/lib/debug"
+
+  # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
+  - name: launch_script
+    sources:
+      - type: file
+        path: io.github.theforceengine.tfe.sh
+    buildsystem: simple
     build-commands:
-      - |
-        set -e
-        install -Dm 0755 '../io.github.theforceengine.tfe.sh' -t '/app/bin'
-        install -Dm 0755 '../io.github.theforceengine.tfe.releases.xml' -t '/app/share/metainfo/releases/'
-        desktop-file-edit --set-key=Exec --set-value='io.github.theforceengine.tfe.sh' '../TheForceEngine/io.github.theforceengine.tfe.desktop'
+      # Install launch script
+      - install -Dm 0755 "$FLATPAK_ID.sh" -t "$FLATPAK_DEST/bin"
+      # Update desktop launcher file to exec the launch script
+      - desktop-file-edit --set-key=Exec
+                          --set-value="$FLATPAK_ID.sh"
+                          "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
+
+cleanup-commands:
+  # Remove upstream TFE installed AdjustableHud AppStream metadata from the TFE app
+  - rm -vf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+
+add-extensions:
+  # TFE’s mod extension point
+  io.github.theforceengine.tfe.Mod:
+    directory: share/TheForceEngine/Mods
+    merge-dirs: .
+    no-autodownload: true
+    autodelete: false
+    bundle: false
+    subdirectories: true
+  # AdjustableHud mod bundled with TFE
+  io.github.theforceengine.tfe.Mod.AdjustableHud:
+    directory: share/TheForceEngine/Mods
+    no-autodownload: false
+    autodelete: true
+    bundle: true
+    subdirectories: false

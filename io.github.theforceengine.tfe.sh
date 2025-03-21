@@ -5,7 +5,7 @@ if [[ -z "$TFE_SKIP_DATACHECK" ]]; then
                         "$HOME/.local/share/Steam/steamapps/common/Dark Forces/Game/"
                         "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game/")
     for check in "${dfpaths[@]}"; do
-        if [[ ! -z $(find "$check" -iname 'dark.gob') ]]; then
+        if [[ ! -z $(find "$check" -iname 'DARK.GOB') ]]; then
             FOUND_DFDATA="true"
             echo "Found Dark Forces data: $check"
             break
@@ -13,9 +13,9 @@ if [[ -z "$TFE_SKIP_DATACHECK" ]]; then
     done
     if [[ -z "$FOUND_DFDATA" ]]; then
         zenity --error \
-            --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
-            --ok-label 'Close' \
-            --no-wrap
+               --text "<b>Could not find Dark Forces game data</b>\\n\\nPlease either install Dark Forces via Steam to your default library path or copy the game data to <tt><b>$XDG_DATA_HOME/</b></tt>." \
+               --ok-label 'Close' \
+               --no-wrap
     fi
 fi
 export TFE_DATA_HOME='/app/share/TheForceEngine'

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b088aa2a..489bc82b 100644
+index 919dd4c5..eb855704 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -14,7 +14,7 @@ project(TheForceEngine
@@ -12,53 +12,126 @@ index b088aa2a..489bc82b 100644
  set(CMAKE_CXX_EXTENSIONS OFF)
  
 diff --git a/TheForceEngine/TFE_Settings/settings.cpp b/TheForceEngine/TFE_Settings/settings.cpp
-index 9724175e..a7c88dd0 100644
+index fa495dd0..e7ef42aa 100644
 --- a/TheForceEngine/TFE_Settings/settings.cpp
 +++ b/TheForceEngine/TFE_Settings/settings.cpp
-@@ -9,8 +9,11 @@
- #include <TFE_System/system.h>
+@@ -10,6 +10,8 @@
+ #include <TFE_A11y/accessibility.h>
  #include <assert.h>
  #include <algorithm>
 +#include <filesystem>
 +#include <array>
  #include <vector>
  
-+
  #ifdef _WIN32
- #include "windows/registry.h"
- #endif
-@@ -230,15 +233,26 @@ namespace TFE_Settings
- 			// If the registry approach fails, just try looking in the various hardcoded paths.
- 			if (!pathValid)
+@@ -157,96 +159,21 @@ namespace TFE_Settings
+ 	{
+ 		for (u32 gameId = 0; gameId < Game_Count; gameId++)
+ 		{
+-			const size_t sourcePathLen = strlen(s_gameSettings.header[gameId].sourcePath);
+-			bool pathValid = sourcePathLen && validatePath(s_gameSettings.header[gameId].sourcePath, c_validationFile[gameId]);
+-
+-			// First check locally, and then check the registry.
+-			if (!pathValid && gameId == Game_Dark_Forces)	// Only Dark Forces for now.
+-			{
+-				// First try the local path.
+-				char localPath[TFE_MAX_PATH];
+-				TFE_Paths::appendPath(PATH_PROGRAM, "DARK.GOB", localPath);
+-
+-				FileStream file;
+-				if (file.open(localPath, Stream::MODE_READ))
+-				{
+-					if (file.getSize() > 1)
+-					{
+-						strcpy(s_gameSettings.header[gameId].sourcePath, TFE_Paths::getPath(PATH_PROGRAM));
+-						FileUtil::fixupPath(s_gameSettings.header[gameId].sourcePath);
+-						pathValid = true;
+-					}
+-					file.close();
+-				}
+-
+-				// Then try local/Games/Dark Forces/
+-				if (!pathValid)
+-				{
+-					char gamePath[TFE_MAX_PATH];
+-					sprintf(gamePath, "%sGames/Dark Forces/", TFE_Paths::getPath(PATH_PROGRAM));
+-					FileUtil::fixupPath(gamePath);
+-
+-					sprintf(localPath, "%sDARK.GOB", gamePath);
+-					if (file.open(localPath, Stream::MODE_READ))
+-					{
+-						if (file.getSize() > 1)
+-						{
+-							strcpy(s_gameSettings.header[gameId].sourcePath, gamePath);
+-							pathValid = true;
+-						}
+-						file.close();
+-					}
+-				}
+-			}
+-
+-#ifdef _WIN32
+-			// Next try looking through the registry.
+-			if (!pathValid)
+-			{
+-				// Remaster - search here first so that new assets are readily available.
+-				pathValid = WindowsRegistry::getSteamPathFromRegistry(c_steamRemasterProductId[gameId], c_steamRemasterLocalPath[gameId], c_steamRemasterLocalSubPath[gameId], c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				// Remaster on GOG.
+-				if (!pathValid)
+-				{
+-					pathValid = WindowsRegistry::getGogPathFromRegistry(c_gogRemasterProductId[gameId], c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				}
+-
+-				// Then try the vanilla version on Steam.
+-				if (!pathValid)
+-				{
+-					pathValid = WindowsRegistry::getSteamPathFromRegistry(c_steamProductId[gameId], c_steamLocalPath[gameId], c_steamLocalSubPath[gameId], c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				}
+-				// And the vanilla version on GOG.
+-				if (!pathValid)
+-				{
+-					pathValid = WindowsRegistry::getGogPathFromRegistry(c_gogProductId[gameId], c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				}
+-			}
+-#endif
+-#ifdef __linux__
+-			if (!pathValid)
+-			{
+-				pathValid = LinuxSteam::getSteamPath(c_steamRemasterProductId[gameId], c_steamRemasterLocalPath[gameId],
+-					c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-
+-				if (!pathValid)
+-				{
+-					pathValid = LinuxSteam::getSteamPath(c_steamProductId[gameId], c_steamLocalSubPath[gameId],
+-						c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				}
+-			}
+-#endif
+-			// If the registry approach fails, just try looking in the various hardcoded paths.
+-			if (!pathValid)
++			std::array<std::string, 4> locations = {
++				std::getenv("XDG_DATA_HOME"),
++				".steam/steam/steamapps/common/Dark Forces/Game",
++				".var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game",
++				"snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game"
++			};
++			for (const auto& loc : locations)
  			{
 -				// Try various possible locations.
--				const char** locations = c_gameLocations[gameId];
--				for (u32 i = 0; i < c_hardcodedPathCount; i++)
-+				std::array<std::string, 4> locations =
- 				{
+-				const char* const * locations = c_gameLocations[gameId];
+-				for (u32 i = 0; i < c_hardcodedPathCount[gameId]; i++)
+-				{
 -					if (FileUtil::directoryExits(locations[i]))
 -					{
 -						strcpy(s_gameSettings.header[gameId].sourcePath, locations[i]);
 -						pathValid = true;
--						break;
-+					std::getenv("XDG_DATA_HOME"),
-+					".steam/steam/steamapps/common/Dark Forces/Game",
-+					".var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game",
-+					"snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game"
-+				};
-+				for (const auto& loc : locations)
-+				{
-+					std::filesystem::path checkPath = std::filesystem::path(std::getenv("HOME"));
-+					checkPath /= loc;
-+					if (! std::filesystem::exists(checkPath)) { continue; }
-+
-+				    for (auto const& dir_entry : std::filesystem::directory_iterator{checkPath}) {
-+						if (strcasecmp(const_cast<char*>(dir_entry.path().filename().c_str()), "dark.gob") == 0) {
-+							TFE_System::logWrite(LOG_MSG, "Main", const_cast<char*>(checkPath.c_str()));
-+							strcpy(s_gameSettings.header[gameId].sourcePath, const_cast<char*>((std::string(checkPath) + "/").c_str()));
-+							pathValid = true;
-+							break;
-+						}
++				std::filesystem::path checkPath = std::filesystem::path(std::getenv("HOME"));
++				checkPath /= loc;
++				if (! std::filesystem::exists(checkPath)) { continue; }
++				for (auto const& dir_entry : std::filesystem::directory_iterator{checkPath}) {
++					if (strcasecmp(const_cast<char*>(dir_entry.path().filename().c_str()), "dark.gob") == 0) {
++						TFE_System::logWrite(LOG_MSG, "Main", const_cast<char*>(checkPath.c_str()));
++						strcpy(s_gameSettings.header[gameId].sourcePath, const_cast<char*>((std::string(checkPath) + "/").c_str()));
+ 						break;
  					}
  				}
- 			}

@@ -4,6 +4,11 @@ runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
 
+cleanup:
+  - include
+  - lib/cmake/*
+  - share/rtmidi/*
+
 finish-args:
   # hardware 3D and controller access
   - --device=all
@@ -21,7 +26,29 @@ modules:
   - name: tfe
     modules:
       - shared-modules/glu/glu-9.json
-      - shared-modules/glew/glew.json
+      - name: angelscript
+        sources:
+        - type: archive
+          url: https://angelcode.com/angelscript/sdk/files/angelscript_2.37.0.zip
+          sha256: 0c52d1688016a0b2484e9ca549471c4e295df060770c57840144c64815f54f10
+          x-checker-data:
+            type: anitya
+            project-id: 7896
+            url-template: https://angelcode.com/angelscript/sdk/files/angelscript_$version.zip
+        buildsystem: cmake-ninja
+        config-opts:
+          - -DBUILD_SHARED_LIBS=ON
+        subdir: angelscript/projects/cmake
+      - name: rtmidi
+        buildsystem: cmake-ninja
+        sources:
+          - type: archive
+            url: https://github.com/thestk/rtmidi/archive/refs/tags/6.0.0.tar.gz
+            sha256: ef7bcda27fee6936b651c29ebe9544c74959d0b1583b716ce80a1c6fea7617f0
+            x-checker-data:
+              type: anitya
+              project-id: 4220
+              url-template: https://github.com/thestk/rtmidi/archive/refs/tags/$version.tar.gz
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
@@ -32,19 +59,23 @@ modules:
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch
-      # Patch automatic detection of Dark Forces installation to only check default Steam path
+      # Patch automatic detection of Dark Forces installation
       - type: patch
         path: tfe_02_game_data_detection.patch
+      # FIXME: Use SVG icon by default. Delete after the next release.
+      - type: patch
+        path: tfe_03_use_svg_icon.patch
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
       # `.Debug` extension AppStream metadata
       - type: file
         path: io.github.theforceengine.tfe.Debug.metainfo.xml
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DDISABLE_SYSMIDI=ON
+      - -DENABLE_FORCE_SCRIPT=ON
+      - -DENABLE_EDITOR=ON
     builddir: true
     post-install:
       # Install AdjustableHud mod’s AppStream metadata

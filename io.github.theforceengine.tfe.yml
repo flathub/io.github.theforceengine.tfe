@@ -78,6 +78,10 @@ modules:
       - -DENABLE_EDITOR=ON
     builddir: true
     post-install:
+      # Install release metadata
+      - install -Dvm 0644
+                -t "$FLATPAK_DEST/share/metainfo/releases"
+                "$FLATPAK_BUILDER_BUILDDIR/$FLATPAK_ID.releases.xml"
       # Install AdjustableHud mod’s AppStream metadata
       - install -Dvm 0644
                 -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"

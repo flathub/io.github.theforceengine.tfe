@@ -1,8 +1,12 @@
 diff --git a/TheForceEngine/TFE_ForceScript/CMakeLists.txt b/TheForceEngine/TFE_ForceScript/CMakeLists.txt
-index 236b2795..b0232364 100644
+index 236b2795..c509db02 100644
 --- a/TheForceEngine/TFE_ForceScript/CMakeLists.txt
 +++ b/TheForceEngine/TFE_ForceScript/CMakeLists.txt
-@@ -5,32 +5,13 @@ target_sources(tfe PRIVATE ${SOURCES})
+@@ -1,36 +1,14 @@
+ file(GLOB_RECURSE SOURCES "*.cpp" "*.c")
+ 
+-target_sources(tfe PRIVATE ${SOURCES})
+-
  # Add support for ARM calling conventions.
  # Uncomment after testing on ARM.
  
@@ -12,7 +16,7 @@ index 236b2795..b0232364 100644
 -#    set(ARCHFLAGS "aarch64")
 -#  endif ()
 -#endif ()
- 
+-
 -#if(${ARCHFLAGS} MATCHES "^arm")
 -#    enable_language(ASM)
 -#    if(CMAKE_ASM_COMPILER_WORKS)
@@ -22,7 +26,7 @@ index 236b2795..b0232364 100644
 -#        message(FATAL ERROR "ARM target requires a working assembler")
 -#    endif()
 -#endif()
- 
+-
 -#if(${ARCHFLAGS} MATCHES "^aarch64")
 -#    enable_language(ASM)
 -#    if(CMAKE_ASM_COMPILER_WORKS)
@@ -43,3 +47,4 @@ index 236b2795..b0232364 100644
 +   message(FATAL ERROR "ARM target requires a working assembler")
 + endif()
 +endif()
++target_sources(tfe PRIVATE ${SOURCES})

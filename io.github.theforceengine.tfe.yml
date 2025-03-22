@@ -65,6 +65,9 @@ modules:
       # FIXME: Use SVG icon by default. Delete after the next release.
       - type: patch
         path: tfe_03_use_svg_icon.patch
+      # FIXME: Enable ARM64 assembly code. Delete after the next release.
+      - type: patch
+        path: tfe_04_enable_arm64_forcescript.patch
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml

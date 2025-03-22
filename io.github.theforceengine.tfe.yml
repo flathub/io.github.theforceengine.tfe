@@ -26,19 +26,6 @@ modules:
   - name: tfe
     modules:
       - shared-modules/glu/glu-9.json
-      - name: angelscript
-        sources:
-        - type: archive
-          url: https://angelcode.com/angelscript/sdk/files/angelscript_2.37.0.zip
-          sha256: 0c52d1688016a0b2484e9ca549471c4e295df060770c57840144c64815f54f10
-          x-checker-data:
-            type: anitya
-            project-id: 7896
-            url-template: https://angelcode.com/angelscript/sdk/files/angelscript_$version.zip
-        buildsystem: cmake-ninja
-        config-opts:
-          - -DBUILD_SHARED_LIBS=ON
-        subdir: angelscript/projects/cmake
       - name: rtmidi
         buildsystem: cmake-ninja
         sources:

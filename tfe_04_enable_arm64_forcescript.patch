@@ -48,3 +48,15 @@ index 236b2795..c509db02 100644
 + endif()
 +endif()
 +target_sources(tfe PRIVATE ${SOURCES})
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 919dd4c5..e32fd9a2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,7 @@ endif()
+ project(TheForceEngine
+ 	HOMEPAGE_URL "https://theforceengine.github.io"
+ 	DESCRIPTION "Modern 'Jedi Engine' replacement supporting Dark Forces, mods, and in the future Outlaws."
++	LANGUAGES C CXX ASM
+ 	)
+ 
+ set(CMAKE_CXX_STANDARD 14)

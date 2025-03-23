@@ -52,9 +52,6 @@ modules:
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
-      # `.Debug` extension AppStream metadata
-      - type: file
-        path: io.github.theforceengine.tfe.Debug.metainfo.xml
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo

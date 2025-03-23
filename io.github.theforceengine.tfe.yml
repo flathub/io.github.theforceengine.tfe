@@ -4,6 +4,11 @@ runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
 
+cleanup:
+  - include
+  - lib/cmake/*
+  - share/rtmidi/*
+
 finish-args:
   # hardware 3D and controller access
   - --device=all
@@ -21,34 +26,52 @@ modules:
   - name: tfe
     modules:
       - shared-modules/glu/glu-9.json
-      - shared-modules/glew/glew.json
+      - name: rtmidi
+        buildsystem: cmake-ninja
+        sources:
+          - type: archive
+            url: https://github.com/thestk/rtmidi/archive/refs/tags/6.0.0.tar.gz
+            sha256: ef7bcda27fee6936b651c29ebe9544c74959d0b1583b716ce80a1c6fea7617f0
+            x-checker-data:
+              type: anitya
+              project-id: 4220
+              url-template: https://github.com/thestk/rtmidi/archive/refs/tags/$version.tar.gz
     sources:
       - type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
         x-checker-data:
           type: git
           tag-pattern: ^v\\d+(\\.\\d+)+$
-        # temporarily pin to a commit using the new external release info so flathub release info is correct
-        commit: 6c07cc07e48454c407d17fc0820c457cdfe35abd
-        tag: v1.10.000
+        tag: v1.15.000
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch
-      # Patch automatic detection of Dark Forces installation to only check default Steam path
+      # Patch automatic detection of Dark Forces installation
       - type: patch
         path: tfe_02_game_data_detection.patch
+      # FIXME: Use SVG icon by default. Delete after the next release.
+      - type: patch
+        path: tfe_03_use_svg_icon.patch
+      # FIXME: Enable ARM64 assembly code. Delete after the next release.
+      - type: patch
+        path: tfe_04_enable_arm64_forcescript.patch
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
       # `.Debug` extension AppStream metadata
       - type: file
         path: io.github.theforceengine.tfe.Debug.metainfo.xml
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DDISABLE_SYSMIDI=ON
+      - -DENABLE_FORCE_SCRIPT=ON
+      - -DENABLE_EDITOR=ON
     builddir: true
     post-install:
+      # Install release metadata
+      - install -Dvm 0644
+                -t "$FLATPAK_DEST/share/metainfo/releases"
+                "$FLATPAK_BUILDER_BUILDDIR/$FLATPAK_ID.releases.xml"
       # Install AdjustableHud mod’s AppStream metadata
       - install -Dvm 0644
                 -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"
@@ -72,7 +95,7 @@ modules:
                      --origin="$FLATPAK_ID.Debug"
                      --result-root="$FLATPAK_DEST/lib/debug"
                      --data-dir="$FLATPAK_DEST/lib/debug/share/app-info/xmls"
-                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak" 
+                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak"
                      --components="$FLATPAK_ID.Debug"
                      "$FLATPAK_DEST/lib/debug"
 

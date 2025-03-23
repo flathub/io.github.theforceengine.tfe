@@ -4,7 +4,7 @@ index 02a79f8d..38c9eea5 100644
 +++ b/TheForceEngine/TFE_FileSystem/paths-posix.cpp
 @@ -98,9 +98,7 @@ namespace TFE_Paths
  		}
- 
+
  		std::string s;
 -		s = std::string("/usr/local/share/") + append + "/";
 -		s_systemPaths.push_back(s);
@@ -16,73 +16,9 @@ index 02a79f8d..38c9eea5 100644
 @@ -119,7 +117,7 @@ namespace TFE_Paths
  		// ensure SetProgramDataPath() was called before
  		assert(!s_paths[PATH_PROGRAM_DATA].empty());
- 
+
 -		s_paths[PATH_USER_DOCUMENTS] = s_paths[PATH_PROGRAM_DATA];
 +		s_paths[PATH_USER_DOCUMENTS] = strcat(getenv("XDG_CONFIG_HOME"), "/");
  		s_systemPaths.push_back(getPath(PATH_USER_DOCUMENTS));
  		// set cwd to user documents path, because Dear ImGUI drops
  		// its ini file at the cwd, we don't want it to litter somewhere
-diff --git a/TheForceEngine/TFE_ExternalData/pickupExternal.cpp b/TheForceEngine/TFE_ExternalData/pickupExternal.cpp
-index d4c416c9..044c9c47 100644
---- a/TheForceEngine/TFE_ExternalData/pickupExternal.cpp
-+++ b/TheForceEngine/TFE_ExternalData/pickupExternal.cpp
-@@ -55,11 +55,11 @@ namespace TFE_ExternalData
- 
- 	void loadExternalPickups()
- 	{
--		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM);
-+		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM_DATA);
- 		char extDataFile[TFE_MAX_PATH];
- 		sprintf(extDataFile, "%sExternalData/DarkForces/pickups.json", programDir);
- 
--		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading pickup data");
-+		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading pickup data %s", extDataFile);
- 		FileStream file;
- 		if (!file.open(extDataFile, FileStream::MODE_READ)) { return; }
- 
-diff --git a/TheForceEngine/TFE_ExternalData/weaponExternal.cpp b/TheForceEngine/TFE_ExternalData/weaponExternal.cpp
-index 207ca85d..94ae44cf 100644
---- a/TheForceEngine/TFE_ExternalData/weaponExternal.cpp
-+++ b/TheForceEngine/TFE_ExternalData/weaponExternal.cpp
-@@ -81,11 +81,11 @@ namespace TFE_ExternalData
- 
- 	void loadExternalProjectiles()
- 	{
--		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM);
-+		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM_DATA);
- 		char extDataFile[TFE_MAX_PATH];
- 		sprintf(extDataFile, "%sExternalData/DarkForces/projectiles.json", programDir);
- 
--		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading projectile data");
-+		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading projectile data %s", extDataFile);
- 		FileStream file;
- 		if (!file.open(extDataFile, FileStream::MODE_READ)) { return; }
- 
-@@ -173,11 +176,11 @@ namespace TFE_ExternalData
- 
- 	void loadExternalEffects()
- 	{
--		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM);
-+		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM_DATA);
- 		char extDataFile[TFE_MAX_PATH];
- 		sprintf(extDataFile, "%sExternalData/DarkForces/effects.json", programDir);
- 
--		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading effects data");
-+		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading effects data %s", extDataFile);
- 		FileStream file;
- 		if (!file.open(extDataFile, FileStream::MODE_READ)) { return; }
- 
-@@ -265,11 +268,11 @@ namespace TFE_ExternalData
- 
- 	void loadExternalWeapons()
- 	{
--		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM);
-+		const char* programDir = TFE_Paths::getPath(PATH_PROGRAM_DATA);
- 		char extDataFile[TFE_MAX_PATH];
- 		sprintf(extDataFile, "%sExternalData/DarkForces/weapons.json", programDir);
- 
--		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading weapon data");
-+		TFE_System::logWrite(LOG_MSG, "EXTERNAL_DATA", "Loading weapon data %s", extDataFile);
- 		FileStream file;
- 		if (!file.open(extDataFile, FileStream::MODE_READ)) { return; }
- 

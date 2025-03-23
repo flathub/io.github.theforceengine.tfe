@@ -42,19 +42,13 @@ modules:
         x-checker-data:
           type: git
           tag-pattern: ^v\\d+(\\.\\d+)+$
-        tag: v1.15.000
+        tag: v1.22.000
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch
       # Patch automatic detection of Dark Forces installation
       - type: patch
         path: tfe_02_game_data_detection.patch
-      # FIXME: Use SVG icon by default. Delete after the next release.
-      - type: patch
-        path: tfe_03_use_svg_icon.patch
-      # FIXME: Enable ARM64 assembly code. Delete after the next release.
-      - type: patch
-        path: tfe_04_enable_arm64_forcescript.patch
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
@@ -64,7 +58,6 @@ modules:
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DENABLE_FORCE_SCRIPT=ON
       - -DENABLE_EDITOR=ON
     builddir: true
     post-install:
@@ -82,7 +75,7 @@ modules:
                      --origin="$FLATPAK_ID.Mod.AdjustableHud"
                      --result-root="$FLATPAK_DEST/share/TheForceEngine/Mods"
                      --data-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/xmls"
-                     --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak" 
+                     --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak"
                      --components="$FLATPAK_ID.Mod.AdjustableHud"
                      "$FLATPAK_DEST/share/TheForceEngine/Mods"
       # Install `.Debug` extension AppStream metadata

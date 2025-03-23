@@ -1,5 +1,5 @@
 diff --git a/TheForceEngine/TFE_ForceScript/CMakeLists.txt b/TheForceEngine/TFE_ForceScript/CMakeLists.txt
-index 236b2795..3d41c688 100644
+index 236b2795..a3deb7ad 100644
 --- a/TheForceEngine/TFE_ForceScript/CMakeLists.txt
 +++ b/TheForceEngine/TFE_ForceScript/CMakeLists.txt
 @@ -1,36 +1,15 @@
@@ -10,8 +10,8 @@ index 236b2795..3d41c688 100644
 + enable_language(ASM)
 + if(CMAKE_ASM_COMPILER_WORKS)
 +   set(SOURCES
-+            TFE_ForceScript/Angelscript/angelscript/source/as_callfunc_arm64_gcc.S
-+            TFE_ForceScript/Angelscript/angelscript/source/as_callfunc_arm64.cpp
++            TheForceEngine/TFE_ForceScript/Angelscript/angelscript/source/as_callfunc_arm64_gcc.S
++            TheForceEngine/TFE_ForceScript/Angelscript/angelscript/source/as_callfunc_arm64.cpp
 +   )
 + else()
 +   message(FATAL ERROR "ARM target requires a working assembler")

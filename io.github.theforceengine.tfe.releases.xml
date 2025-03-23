@@ -1,4 +1,10 @@
 <releases>
+    <release version="1.22.000" date="2025-02-23">
+        <url>https://github.com/luciusDXL/TheForceEngine/releases/tag/v1.22.000</url>
+        <description>
+            <p>With this release the TFE Editor finally hits the Alpha phase. Documentation and tutorials are still being worked on, but you can find links to some on the release web page!</p>
+        </description>
+    </release>
     <release version="1.15.000" date="2025-02-22">
         <url>https://github.com/luciusDXL/TheForceEngine/releases/tag/v1.15.000</url>
         <description>

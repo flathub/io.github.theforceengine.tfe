@@ -8,7 +8,7 @@ index 919dd4c5..e32fd9a2 100644
  	DESCRIPTION "Modern 'Jedi Engine' replacement supporting Dark Forces, mods, and in the future Outlaws."
 +	LANGUAGES C CXX ASM
  	)
- 
+
  set(CMAKE_CXX_STANDARD 14)
 diff --git a/TheForceEngine/TFE_ForceScript/CMakeLists.txt b/TheForceEngine/TFE_ForceScript/CMakeLists.txt
 index 236b2795..d7b7cbf0 100644
@@ -16,11 +16,11 @@ index 236b2795..d7b7cbf0 100644
 +++ b/TheForceEngine/TFE_ForceScript/CMakeLists.txt
 @@ -1,36 +1,14 @@
  file(GLOB_RECURSE SOURCES "*.cpp" "*.c")
- 
+
 +set(ARCHFLAGS "${CMAKE_SYSTEM_PROCESSOR}")
 +if(${ARCHFLAGS} MATCHES "^aarch64")
 + if(CMAKE_ASM_COMPILER_WORKS)
-+   set(SOURCES
++   list(APPEND SOURCES
 +            TheForceEngine/TFE_ForceScript/Angelscript/angelscript/source/as_callfunc_arm64_gcc.S
 +            TheForceEngine/TFE_ForceScript/Angelscript/angelscript/source/as_callfunc_arm64.cpp
 +   )

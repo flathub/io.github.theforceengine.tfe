@@ -78,19 +78,6 @@ modules:
                      --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak"
                      --components="$FLATPAK_ID.Mod.AdjustableHud"
                      "$FLATPAK_DEST/share/TheForceEngine/Mods"
-      # Install `.Debug` extension AppStream metadata
-      - install -Dvm 0644
-                -t "$FLATPAK_DEST/lib/debug/share/metainfo"
-                "../$FLATPAK_ID.Debug.metainfo.xml"
-      # Compose `.Debug` extension’s AppStream metadata catalog
-      - appstreamcli compose
-                     --prefix=/
-                     --origin="$FLATPAK_ID.Debug"
-                     --result-root="$FLATPAK_DEST/lib/debug"
-                     --data-dir="$FLATPAK_DEST/lib/debug/share/app-info/xmls"
-                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak"
-                     --components="$FLATPAK_ID.Debug"
-                     "$FLATPAK_DEST/lib/debug"
 
   # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
   - name: launch_script

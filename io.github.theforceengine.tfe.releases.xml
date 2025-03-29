@@ -2,13 +2,20 @@
     <release version="1.22.000" date="2025-02-23">
         <url>https://github.com/luciusDXL/TheForceEngine/releases/tag/v1.22.000</url>
         <description>
-            <p>With this release the TFE Editor finally hits the Alpha phase. Documentation and tutorials are still being worked on, but you can find links to some on the release web page!</p>
+            <p>With this release the TFE Editor finally hits the Alpha phase.
+                Documentation and tutorials are still being worked on, but you can find
+                links to some on the release web page!</p>
         </description>
     </release>
     <release version="1.15.000" date="2025-02-22">
         <url>https://github.com/luciusDXL/TheForceEngine/releases/tag/v1.15.000</url>
         <description>
-            <p>This release improves moddability by externalizing previously hard-coded data into ExternalData/DarkForces/ and allows for many properties of effects, pickups, projectiles, and weapons to be changed. In addition, first pass scripting integration has been implemented in the form of script functions that can be called from INF. Please visit the GitHub release page for a detailed list of user-facing changes.</p>
+            <p>This release improves moddability by externalizing previously hard-coded
+                data into ExternalData/DarkForces/ and allows for many properties of
+                effects, pickups, projectiles, and weapons to be changed. In addition,
+                first pass scripting integration has been implemented in the form of
+                script functions that can be called from INF. Please visit the GitHub
+                release page for a detailed list of user-facing changes.</p>
         </description>
     </release>
     <release version="1.10.000" date="2024-07-17">

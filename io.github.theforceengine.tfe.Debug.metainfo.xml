@@ -15,7 +15,7 @@
   <summary xml:lang="pl">Symbole usuwania błędów „The&#x00A0;Force&#x00A0;Engine” umożliwiają efektywną współpracę między twórcami oprogramowania i zaawansowanymi użytkownikami przy naprawie błędów</summary>
   <!-- Uncomment after https://github.com/ximion/appstream/issues/703 has been fixed
    icon type="stock">application-x-executable</icon-->
-  <icon type="stock">archer</icon>
+  <icon type="stock">io.github.theforceengine.tfe.Debug</icon>
   <icon type="remote" width="200" height="125">https://sourceware.org/gdb/images/archer.svg</icon>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>

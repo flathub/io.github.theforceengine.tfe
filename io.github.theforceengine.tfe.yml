@@ -37,7 +37,8 @@ modules:
               project-id: 4220
               url-template: https://github.com/thestk/rtmidi/archive/refs/tags/$version.tar.gz
     sources:
-      - type: git
+      - &tfe_git_source
+        type: git
         url: https://github.com/luciusDXL/TheForceEngine.git
         x-checker-data:
           type: git
@@ -52,9 +53,6 @@ modules:
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
-      # `.Debug` extension AppStream metadata
-      - type: file
-        path: io.github.theforceengine.tfe.Debug.metainfo.xml
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=RelWithDebInfo
@@ -65,10 +63,17 @@ modules:
       - install -Dvm 0644
                 -t "$FLATPAK_DEST/share/metainfo/releases"
                 "$FLATPAK_BUILDER_BUILDDIR/$FLATPAK_ID.releases.xml"
+
+  # `.Mod.AdjustableHud` extension
+  - name: AdjustableHud
+    sources:
+      - *tfe_git_source
+    buildsystem: simple
+    build-commands:
       # Install AdjustableHud mod’s AppStream metadata
       - install -Dvm 0644
                 -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"
-                "../TheForceEngine/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+                "TheForceEngine/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
       # Compose AdjustableHud mod’s AppStream metadata catalog
       - appstreamcli compose
                      --prefix=/
@@ -78,10 +83,25 @@ modules:
                      --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak"
                      --components="$FLATPAK_ID.Mod.AdjustableHud"
                      "$FLATPAK_DEST/share/TheForceEngine/Mods"
+
+  # `.Debug` extension
+  - name: debug
+    sources:
+      - type: file
+        path: io.github.theforceengine.tfe.Debug.metainfo.xml
+      - type: file
+        url: https://sourceware.org/gdb/images/archer.svg
+        sha256: 0b395702ca5d13ef32f7b9643b24a0c968ad193f45c22601ac3049b0575273ff
+        dest-filename: io.github.theforceengine.tfe.Debug.svg
+    buildsystem: simple
+    build-commands:
       # Install `.Debug` extension AppStream metadata
       - install -Dvm 0644
                 -t "$FLATPAK_DEST/lib/debug/share/metainfo"
-                "../$FLATPAK_ID.Debug.metainfo.xml"
+                "$FLATPAK_ID.Debug.metainfo.xml"
+      - install -Dvm 0644
+                -t "$FLATPAK_DEST/lib/debug/share/icons/hicolor/scalable/apps"
+                "$FLATPAK_ID.Debug.svg"
       # Compose `.Debug` extension’s AppStream metadata catalog
       - appstreamcli compose
                      --prefix=/

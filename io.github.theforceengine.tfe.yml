@@ -127,8 +127,10 @@ modules:
                           "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
 
 cleanup-commands:
-  # Remove upstream TFE installed AdjustableHud AppStream metadata from the TFE app
-  - rm -vf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+  - rm -rvf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+            "$FLATPAK_DEST/include"
+            "$FLATPAK_DEST/lib/"*'.a'
+            "$FLATPAK_DEST/lib/pkgconfig"
 
 add-extensions:
   # TFE’s mod extension point

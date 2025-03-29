@@ -13,6 +13,10 @@
   <summary>“The&#x00A0;Force&#x00A0;Engine” debug symbols enable developers and advanced users to effectively collaborate in fixing program bugs</summary>
   <summary xml:lang="de">Die „The&#x00A0;Force&#x00A0;Engine“&#x2011;Fehlerbehebungssymbole ermöglichen Entwicklern und fortgeschrittenen Benutzern eine effektive Zusammenarbeit bei der Behebung von Programmfehlern</summary>
   <summary xml:lang="pl">Symbole usuwania błędów „The&#x00A0;Force&#x00A0;Engine” umożliwiają efektywną współpracę między twórcami oprogramowania i zaawansowanymi użytkownikami przy naprawie błędów</summary>
+  <!-- Uncomment after https://github.com/ximion/appstream/issues/703 has been fixed
+   icon type="stock">application-x-executable</icon-->
+  <icon type="stock">archer</icon>
+  <icon type="remote" width="200" height="125">https://sourceware.org/gdb/images/archer.svg</icon>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
   <extends>io.github.theforceengine.tfe</extends>
@@ -25,6 +29,14 @@
     <p xml:lang="de">Diese Erweiterung externer Fehlerbehebungssymbole sollte ausschließlich bei Abstürzen von „The&#x00A0;Force&#x00A0;Engine“ zur selbständigen Fehlerbehebung installiert werden, oder wenn die Entwickler von „The&#x00A0;Force&#x00A0;Engine“ mit einem fortgeschrittenen Benutzer während des Fehlerbehebungsprozesses zusammen arbeiten wollen. Fehlerbehebungssymbole werden für den normalen Betrieb von „The&#x00A0;Force&#x00A0;Engine“ nicht gebraucht.</p>
     <p xml:lang="pl">To rozszerzenie z symbolami usuwania błędów powinno się instalować wyłącznie na potrzebę samodzielnego usuwania błędów w wypadku awarii „The&#x00A0;Force&#x00A0;Engine” lub gdy twórcy „The&#x00A0;Force&#x00A0;Engine” w trakcie procesu usuwania błędów chcą współpracować z zaawansowanym użytkownikiem. Symbole do usuwania błędów są nie potrzebne do normalnego działania „The&#x00A0;Force&#x00A0;Engine”.</p>
   </description>
+  <screenshots>
+    <screenshot type="default">
+      <caption>The GNU&#x00A0;Debugger Mascot</caption>
+      <caption xml:lang="de">Das GNU&#x00A0;Debugger Maskottchen</caption>
+      <caption xml:lang="pl">Maskotka GNU&#x00A0;Debuggera</caption>
+      <image type="source" width="200" height="125">https://sourceware.org/gdb/images/archer.svg</image>
+    </screenshot>
+  </screenshots>
   <releases type="external" url="https://raw.githubusercontent.com/flathub/io.github.theforceengine.tfe/master/io.github.theforceengine.tfe.releases.xml"/>
   <categories>
     <category>Game</category>

@@ -1,4 +1,46 @@
 <releases>
+    <release version="1.22.420" date="2025-09-10">
+        <url>https://github.com/TheForceEngine/TheForceEngine/releases/tag/v1.22.420</url>
+        <description>
+            <p>A second hot-fix to address issues with features introduced in version
+                1.22.400, along with a few other fixes/changes.</p>
+        </description>
+    </release>
+    <release version="1.22.410" date="2025-09-09">
+        <url>https://github.com/TheForceEngine/TheForceEngine/releases/tag/v1.22.410</url>
+        <description>
+            <p>Unfortunately I borked the saves with the last release, so this is a
+                quick follow-up to fix things.</p>
+        </description>
+    </release>
+    <release version="1.22.400" date="2025-09-09">
+        <url>https://github.com/TheForceEngine/TheForceEngine/releases/tag/v1.22.400</url>
+        <description>
+            <p>Ongoing changes to the level editor and renderer, such as slope support, are
+                not included in this release - they are still a work in progress. Instead
+                this release is meant to capture many community contributions made in the
+                last few months, especially the numerous modding enhancements by @jerethk
+                and fixes and quality of life improvements by @ifeldshteyn.</p>
+        </description>
+    </release>
+    <release version="1.22.300" date="2025-03-30">
+        <url>https://github.com/TheForceEngine/TheForceEngine/releases/tag/v1.22.300</url>
+        <description>
+            <p>Iterative TFE editor release and TFE game update.</p>
+        </description>
+    </release>
+    <release version="1.22.200" date="2025-03-26">
+        <url>https://github.com/TheForceEngine/TheForceEngine/releases/tag/v1.22.200</url>
+        <description>
+            <p>Another small iterative release with TFE Editor improvements.</p>
+        </description>
+    </release>
+    <release version="1.22.100" date="2025-03-24">
+        <url>https://github.com/TheForceEngine/TheForceEngine/releases/tag/v1.22.100</url>
+        <description>
+            <p>A small iterative release with early TFE Editor improvements.</p>
+        </description>
+    </release>
     <release version="1.22.000" date="2025-02-23">
         <url>https://github.com/luciusDXL/TheForceEngine/releases/tag/v1.22.000</url>
         <description>

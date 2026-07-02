@@ -1,6 +1,6 @@
 id: io.github.theforceengine.tfe
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
 
@@ -8,6 +8,12 @@ cleanup:
   - include
   - lib/cmake/*
   - share/rtmidi/*
+
+cleanup-commands:
+  - rm -rvf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+            "$FLATPAK_DEST/include"
+            "$FLATPAK_DEST/lib/"*'.a'
+            "$FLATPAK_DEST/lib/pkgconfig"
 
 finish-args:
   # hardware 3D and controller access
@@ -22,8 +28,30 @@ finish-args:
   - --filesystem=home/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
   - --filesystem=home/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
 
+add-extensions:
+  # TFE’s mod extension point
+  io.github.theforceengine.tfe.Mod:
+    directory: share/TheForceEngine/Mods
+    merge-dirs: .
+    no-autodownload: true
+    autodelete: false
+    bundle: false
+    subdirectories: true
+  # AdjustableHud mod bundled with TFE
+  io.github.theforceengine.tfe.Mod.AdjustableHud:
+    directory: share/TheForceEngine/Mods
+    no-autodownload: false
+    autodelete: true
+    bundle: true
+    subdirectories: false
+
 modules:
   - name: tfe
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DENABLE_EDITOR=ON
+    builddir: true
     modules:
       - shared-modules/glu/glu-9.json
       - name: rtmidi
@@ -39,11 +67,12 @@ modules:
     sources:
       - &tfe_git_source
         type: git
-        url: https://github.com/luciusDXL/TheForceEngine.git
+        url: https://github.com/TheForceEngine/TheForceEngine.git
         x-checker-data:
-          type: git
-          tag-pattern: ^v\\d+(\\.\\d+)+$
-        tag: v1.22.000
+          type: json
+          url: https://api.github.com/repos/TheForceEngine/TheForceEngine/releases/latest
+          tag-query: ^v\\d+(\\.\\d+)+$
+        tag: v1.22.420
       # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
       - type: patch
         path: tfe_01_user_data.patch
@@ -53,11 +82,6 @@ modules:
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
-    buildsystem: cmake-ninja
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DENABLE_EDITOR=ON
-    builddir: true
     post-install:
       # Install release metadata
       - install -Dvm 0644
@@ -125,26 +149,3 @@ modules:
       - desktop-file-edit --set-key=Exec
                           --set-value="$FLATPAK_ID.sh"
                           "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
-
-cleanup-commands:
-  - rm -rvf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
-            "$FLATPAK_DEST/include"
-            "$FLATPAK_DEST/lib/"*'.a'
-            "$FLATPAK_DEST/lib/pkgconfig"
-
-add-extensions:
-  # TFE’s mod extension point
-  io.github.theforceengine.tfe.Mod:
-    directory: share/TheForceEngine/Mods
-    merge-dirs: .
-    no-autodownload: true
-    autodelete: false
-    bundle: false
-    subdirectories: true
-  # AdjustableHud mod bundled with TFE
-  io.github.theforceengine.tfe.Mod.AdjustableHud:
-    directory: share/TheForceEngine/Mods
-    no-autodownload: false
-    autodelete: true
-    bundle: true
-    subdirectories: false

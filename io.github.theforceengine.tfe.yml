@@ -1,6 +1,6 @@
 id: io.github.theforceengine.tfe
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
+runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: io.github.theforceengine.tfe.sh
 
@@ -9,21 +9,50 @@ cleanup:
   - lib/cmake/*
   - share/rtmidi/*
 
+cleanup-commands:
+  - rm -rvf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+            "$FLATPAK_DEST/include"
+            "$FLATPAK_DEST/lib/"*'.a'
+            "$FLATPAK_DEST/lib/pkgconfig"
+
 finish-args:
   # hardware 3D and controller access
   - --device=all
   # X11 + XShm access
   - --share=ipc
-  - --socket=x11
+  - --socket=wayland
+  - --socket=fallback-x11
   # Audio
   - --socket=pulseaudio
   # Access to the default Steam Dark Forces data directory for loose, Flatpak and Snap versions of Steam
-  - --filesystem=home/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
-  - --filesystem=home/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
-  - --filesystem=home/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
+  - --filesystem=~/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
+  - --filesystem=~/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
+
+add-extensions:
+  # TFE’s mod extension point
+  io.github.theforceengine.tfe.Mod:
+    directory: share/TheForceEngine/Mods
+    merge-dirs: .
+    no-autodownload: true
+    autodelete: false
+    bundle: false
+    subdirectories: true
+  # AdjustableHud mod bundled with TFE
+  io.github.theforceengine.tfe.Mod.AdjustableHud:
+    directory: share/TheForceEngine/Mods
+    no-autodownload: false
+    autodelete: true
+    bundle: true
+    subdirectories: false
 
 modules:
   - name: tfe
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+      - -DENABLE_EDITOR=ON
+    builddir: true
     modules:
       - shared-modules/glu/glu-9.json
       - name: rtmidi
@@ -36,28 +65,30 @@ modules:
               type: anitya
               project-id: 4220
               url-template: https://github.com/thestk/rtmidi/archive/refs/tags/$version.tar.gz
+      - shared-modules/SDL2/SDL2_image.json
     sources:
       - &tfe_git_source
         type: git
-        url: https://github.com/luciusDXL/TheForceEngine.git
+        url: https://github.com/TheForceEngine/TheForceEngine.git
         x-checker-data:
-          type: git
-          tag-pattern: ^v\\d+(\\.\\d+)+$
-        tag: v1.22.000
-      # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
+          type: json
+          url: https://api.github.com/repos/TheForceEngine/TheForceEngine/releases/latest
+          tag-query: .tag_name
+        tag: v1.22.420
+        commit: cc25205cc94c36a396f6f50295772f6ec83069a2
       - type: patch
-        path: tfe_01_user_data.patch
-      # Patch automatic detection of Dark Forces installation
-      - type: patch
-        path: tfe_02_game_data_detection.patch
+        paths:
+          # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
+          - io.github.theforceengine.tfe.redirect-user-data.patch
+          # Patch automatic detection of Dark Forces installation
+          - io.github.theforceengine.tfe.game-data-detection.patch
+          # Fix nullptr crash
+          - io.github.theforceengine.tfe.fix-localarchives.patch
+          # Fix temporary directory
+          - io.github.theforceengine.tfe.fix-tempdir.patch
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml
-    buildsystem: cmake-ninja
-    config-opts:
-      - -DCMAKE_BUILD_TYPE=RelWithDebInfo
-      - -DENABLE_EDITOR=ON
-    builddir: true
     post-install:
       # Install release metadata
       - install -Dvm 0644
@@ -125,26 +156,3 @@ modules:
       - desktop-file-edit --set-key=Exec
                           --set-value="$FLATPAK_ID.sh"
                           "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
-
-cleanup-commands:
-  - rm -rvf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
-            "$FLATPAK_DEST/include"
-            "$FLATPAK_DEST/lib/"*'.a'
-            "$FLATPAK_DEST/lib/pkgconfig"
-
-add-extensions:
-  # TFE’s mod extension point
-  io.github.theforceengine.tfe.Mod:
-    directory: share/TheForceEngine/Mods
-    merge-dirs: .
-    no-autodownload: true
-    autodelete: false
-    bundle: false
-    subdirectories: true
-  # AdjustableHud mod bundled with TFE
-  io.github.theforceengine.tfe.Mod.AdjustableHud:
-    directory: share/TheForceEngine/Mods
-    no-autodownload: false
-    autodelete: true
-    bundle: true
-    subdirectories: false

@@ -24,7 +24,7 @@ index fa495dd0..e7ef42aa 100644
  #include <vector>
  
  #ifdef _WIN32
-@@ -157,96 +159,21 @@ namespace TFE_Settings
+@@ -170,103 +172,21 @@ namespace TFE_Settings
  	{
  		for (u32 gameId = 0; gameId < Game_Count; gameId++)
  		{
@@ -76,6 +76,13 @@ index fa495dd0..e7ef42aa 100644
 -			{
 -				// Remaster - search here first so that new assets are readily available.
 -				pathValid = WindowsRegistry::getSteamPathFromRegistry(c_steamRemasterProductId[gameId], c_steamRemasterLocalPath[gameId], c_steamRemasterLocalSubPath[gameId], c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				
+-				// Try special case for trademark in Star Wars title
+-				if (!pathValid)
+-				{
+-					pathValid = WindowsRegistry::getSteamPathFromRegistry(c_steamRemasterProductId[gameId], c_steamRemasterTMLocalPath[gameId], c_steamRemasterLocalSubPath[gameId], c_validationFile[gameId], s_gameSettings.header[gameId].sourcePath);
+-				}
+-
 -				// Remaster on GOG.
 -				if (!pathValid)
 -				{
@@ -125,7 +132,7 @@ index fa495dd0..e7ef42aa 100644
 -					{
 -						strcpy(s_gameSettings.header[gameId].sourcePath, locations[i]);
 -						pathValid = true;
-+				std::filesystem::path checkPath = std::filesystem::path(std::getenv("HOME"));
++				std::filesystem::path checkPath = std::filesystem::path(std::getenv("XDG_DATA_HOME"));
 +				checkPath /= loc;
 +				if (! std::filesystem::exists(checkPath)) { continue; }
 +				for (auto const& dir_entry : std::filesystem::directory_iterator{checkPath}) {

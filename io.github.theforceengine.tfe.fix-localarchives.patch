@@ -1,0 +1,23 @@
+diff --git a/TheForceEngine/TFE_FileSystem/paths-posix.cpp b/TheForceEngine/TFE_FileSystem/paths-posix.cpp
+index d39c3371..90d7fd8b 100644
+--- a/TheForceEngine/TFE_FileSystem/paths-posix.cpp
++++ b/TheForceEngine/TFE_FileSystem/paths-posix.cpp
+@@ -385,11 +385,13 @@ namespace TFE_Paths
+ 
+ 		// Then archives: s_localArchives.
+ 		for (auto it = s_localArchives.begin(); it != s_localArchives.end(); it++) {
+-			u32 index = (*it)->getFileIndex(fileName);
+-			if (index != INVALID_FILE) {
+-				outPath->archive = *it;
+-				outPath->index = index;
+-				return true;
++			if (*it != nullptr) {
++				u32 index = (*it)->getFileIndex(fileName);
++				if (index != INVALID_FILE) {
++					outPath->archive = *it;
++					outPath->index = index;
++					return true;
++				}
+ 			}
+ 		}
+ 

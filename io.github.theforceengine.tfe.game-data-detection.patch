@@ -132,7 +132,7 @@ index fa495dd0..e7ef42aa 100644
 -					{
 -						strcpy(s_gameSettings.header[gameId].sourcePath, locations[i]);
 -						pathValid = true;
-+				std::filesystem::path checkPath = std::filesystem::path(std::getenv("HOME"));
++				std::filesystem::path checkPath = std::filesystem::path(std::getenv("XDG_DATA_HOME"));
 +				checkPath /= loc;
 +				if (! std::filesystem::exists(checkPath)) { continue; }
 +				for (auto const& dir_entry : std::filesystem::directory_iterator{checkPath}) {

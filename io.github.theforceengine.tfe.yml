@@ -20,7 +20,8 @@ finish-args:
   - --device=all
   # X11 + XShm access
   - --share=ipc
-  - --socket=x11
+  - --socket=wayland
+  - --socket=fallback-x11
   # Audio
   - --socket=pulseaudio
   # Access to the default Steam Dark Forces data directory for loose, Flatpak and Snap versions of Steam
@@ -78,9 +79,13 @@ modules:
       - type: patch
         paths:
           # Separate engine data from user data on Linux by setting PATH_USER_DOCUMENTS to XDG_HOME.
-          - tfe_01_user_data.patch
+          - io.github.theforceengine.tfe.redirect-user-data.patch
           # Patch automatic detection of Dark Forces installation
-          - tfe_02_game_data_detection.patch
+          - io.github.theforceengine.tfe.game-data-detection.patch
+          # Fix nullptr crash
+          - io.github.theforceengine.tfe.fix-localarchives.patch
+          # Fix temporary directory
+          - io.github.theforceengine.tfe.fix-tempdir.patch
       # Release metadata
       - type: file
         path: io.github.theforceengine.tfe.releases.xml

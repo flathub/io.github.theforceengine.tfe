@@ -11,9 +11,7 @@ cleanup:
 
 cleanup-commands:
   - rm -rvf "$FLATPAK_DEST/share/metainfo/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
-            "$FLATPAK_DEST/include"
-            "$FLATPAK_DEST/lib/"*'.a'
-            "$FLATPAK_DEST/lib/pkgconfig"
+    "$FLATPAK_DEST/include" "$FLATPAK_DEST/lib/"*'.a' "$FLATPAK_DEST/lib/pkgconfig"
 
 finish-args:
   # hardware 3D and controller access
@@ -26,7 +24,8 @@ finish-args:
   - --socket=pulseaudio
   # Access to the default Steam Dark Forces data directory for loose, Flatpak and Snap versions of Steam
   - --filesystem=~/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
-  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/common/Dark
+    Forces/Game:ro
   - --filesystem=~/snap/steam/common/.local/share/Steam/steamapps/common/Dark Forces/Game:ro
 
 add-extensions:
@@ -59,8 +58,8 @@ modules:
         buildsystem: cmake-ninja
         sources:
           - type: archive
-            url: https://github.com/thestk/rtmidi/archive/refs/tags/6.0.0.tar.gz
-            sha256: ef7bcda27fee6936b651c29ebe9544c74959d0b1583b716ce80a1c6fea7617f0
+            url: https://github.com/thestk/rtmidi/archive/refs/tags/6.1.0.tar.gz
+            sha256: 809ce56bfa67b80afcfa566927ce242a60b6f4c1bacc7e89486fbcf5624c5721
             x-checker-data:
               type: anitya
               project-id: 4220
@@ -91,9 +90,7 @@ modules:
         path: io.github.theforceengine.tfe.releases.xml
     post-install:
       # Install release metadata
-      - install -Dvm 0644
-                -t "$FLATPAK_DEST/share/metainfo/releases"
-                "$FLATPAK_BUILDER_BUILDDIR/$FLATPAK_ID.releases.xml"
+      - install -Dvm 0644 -t "$FLATPAK_DEST/share/metainfo/releases" "$FLATPAK_BUILDER_BUILDDIR/$FLATPAK_ID.releases.xml"
 
   # `.Mod.AdjustableHud` extension
   - name: AdjustableHud
@@ -102,18 +99,12 @@ modules:
     buildsystem: simple
     build-commands:
       # Install AdjustableHud mod’s AppStream metadata
-      - install -Dvm 0644
-                -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"
-                "TheForceEngine/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
+      - install -Dvm 0644 -t "$FLATPAK_DEST/share/TheForceEngine/Mods/share/metainfo"
+        "TheForceEngine/$FLATPAK_ID.Mod.AdjustableHud.metainfo.xml"
       # Compose AdjustableHud mod’s AppStream metadata catalog
-      - appstreamcli compose
-                     --prefix=/
-                     --origin="$FLATPAK_ID.Mod.AdjustableHud"
-                     --result-root="$FLATPAK_DEST/share/TheForceEngine/Mods"
-                     --data-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/xmls"
-                     --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak"
-                     --components="$FLATPAK_ID.Mod.AdjustableHud"
-                     "$FLATPAK_DEST/share/TheForceEngine/Mods"
+      - appstreamcli compose --prefix=/ --origin="$FLATPAK_ID.Mod.AdjustableHud" --result-root="$FLATPAK_DEST/share/TheForceEngine/Mods"
+        --data-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/xmls" --icons-dir="$FLATPAK_DEST/share/TheForceEngine/Mods/share/app-info/icons/flatpak"
+        --components="$FLATPAK_ID.Mod.AdjustableHud" "$FLATPAK_DEST/share/TheForceEngine/Mods"
 
   # `.Debug` extension
   - name: debug
@@ -127,21 +118,13 @@ modules:
     buildsystem: simple
     build-commands:
       # Install `.Debug` extension AppStream metadata
-      - install -Dvm 0644
-                -t "$FLATPAK_DEST/lib/debug/share/metainfo"
-                "$FLATPAK_ID.Debug.metainfo.xml"
-      - install -Dvm 0644
-                -t "$FLATPAK_DEST/lib/debug/share/icons/hicolor/scalable/apps"
-                "$FLATPAK_ID.Debug.svg"
+      - install -Dvm 0644 -t "$FLATPAK_DEST/lib/debug/share/metainfo" "$FLATPAK_ID.Debug.metainfo.xml"
+      - install -Dvm 0644 -t "$FLATPAK_DEST/lib/debug/share/icons/hicolor/scalable/apps"
+        "$FLATPAK_ID.Debug.svg"
       # Compose `.Debug` extension’s AppStream metadata catalog
-      - appstreamcli compose
-                     --prefix=/
-                     --origin="$FLATPAK_ID.Debug"
-                     --result-root="$FLATPAK_DEST/lib/debug"
-                     --data-dir="$FLATPAK_DEST/lib/debug/share/app-info/xmls"
-                     --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak"
-                     --components="$FLATPAK_ID.Debug"
-                     "$FLATPAK_DEST/lib/debug"
+      - appstreamcli compose --prefix=/ --origin="$FLATPAK_ID.Debug" --result-root="$FLATPAK_DEST/lib/debug"
+        --data-dir="$FLATPAK_DEST/lib/debug/share/app-info/xmls" --icons-dir="$FLATPAK_DEST/lib/debug/share/app-info/icons/flatpak"
+        --components="$FLATPAK_ID.Debug" "$FLATPAK_DEST/lib/debug"
 
   # Add a wrapper script that points TFE_DATA_HOME to the correct location within the sandbox
   - name: launch_script
@@ -153,6 +136,4 @@ modules:
       # Install launch script
       - install -Dm 0755 "$FLATPAK_ID.sh" -t "$FLATPAK_DEST/bin"
       # Update desktop launcher file to exec the launch script
-      - desktop-file-edit --set-key=Exec
-                          --set-value="$FLATPAK_ID.sh"
-                          "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
+      - desktop-file-edit --set-key=Exec --set-value="$FLATPAK_ID.sh" "$FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop"
